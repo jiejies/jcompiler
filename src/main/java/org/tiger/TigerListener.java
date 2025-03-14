@@ -8,219 +8,575 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface TigerListener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by {@link TigerParser#program}.
+	 * Enter a parse tree produced by {@link TigerParser#compilationUnit}.
 	 * @param ctx the parse tree
 	 */
-	void enterProgram(TigerParser.ProgramContext ctx);
+	void enterCompilationUnit(TigerParser.CompilationUnitContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link TigerParser#program}.
+	 * Exit a parse tree produced by {@link TigerParser#compilationUnit}.
 	 * @param ctx the parse tree
 	 */
-	void exitProgram(TigerParser.ProgramContext ctx);
+	void exitCompilationUnit(TigerParser.CompilationUnitContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code LiteralExp}
-	 * labeled alternative in {@link TigerParser#exp}.
+	 * Enter a parse tree produced by {@link TigerParser#packageDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterLiteralExp(TigerParser.LiteralExpContext ctx);
+	void enterPackageDeclaration(TigerParser.PackageDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code LiteralExp}
-	 * labeled alternative in {@link TigerParser#exp}.
+	 * Exit a parse tree produced by {@link TigerParser#packageDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitLiteralExp(TigerParser.LiteralExpContext ctx);
+	void exitPackageDeclaration(TigerParser.PackageDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code WhileExp}
-	 * labeled alternative in {@link TigerParser#exp}.
+	 * Enter a parse tree produced by {@link TigerParser#importDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterWhileExp(TigerParser.WhileExpContext ctx);
+	void enterImportDeclaration(TigerParser.ImportDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code WhileExp}
-	 * labeled alternative in {@link TigerParser#exp}.
+	 * Exit a parse tree produced by {@link TigerParser#importDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitWhileExp(TigerParser.WhileExpContext ctx);
+	void exitImportDeclaration(TigerParser.ImportDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code ForExp}
-	 * labeled alternative in {@link TigerParser#exp}.
+	 * Enter a parse tree produced by {@link TigerParser#typeDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterForExp(TigerParser.ForExpContext ctx);
+	void enterTypeDeclaration(TigerParser.TypeDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code ForExp}
-	 * labeled alternative in {@link TigerParser#exp}.
+	 * Exit a parse tree produced by {@link TigerParser#typeDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitForExp(TigerParser.ForExpContext ctx);
+	void exitTypeDeclaration(TigerParser.TypeDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code IdExp}
-	 * labeled alternative in {@link TigerParser#exp}.
+	 * Enter a parse tree produced by {@link TigerParser#classDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterIdExp(TigerParser.IdExpContext ctx);
+	void enterClassDeclaration(TigerParser.ClassDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code IdExp}
-	 * labeled alternative in {@link TigerParser#exp}.
+	 * Exit a parse tree produced by {@link TigerParser#classDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitIdExp(TigerParser.IdExpContext ctx);
+	void exitClassDeclaration(TigerParser.ClassDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code CallExp}
-	 * labeled alternative in {@link TigerParser#exp}.
+	 * Enter a parse tree produced by {@link TigerParser#interfaceDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterCallExp(TigerParser.CallExpContext ctx);
+	void enterInterfaceDeclaration(TigerParser.InterfaceDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code CallExp}
-	 * labeled alternative in {@link TigerParser#exp}.
+	 * Exit a parse tree produced by {@link TigerParser#interfaceDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitCallExp(TigerParser.CallExpContext ctx);
+	void exitInterfaceDeclaration(TigerParser.InterfaceDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code IfExp}
-	 * labeled alternative in {@link TigerParser#exp}.
+	 * Enter a parse tree produced by {@link TigerParser#classBody}.
 	 * @param ctx the parse tree
 	 */
-	void enterIfExp(TigerParser.IfExpContext ctx);
+	void enterClassBody(TigerParser.ClassBodyContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code IfExp}
-	 * labeled alternative in {@link TigerParser#exp}.
+	 * Exit a parse tree produced by {@link TigerParser#classBody}.
 	 * @param ctx the parse tree
 	 */
-	void exitIfExp(TigerParser.IfExpContext ctx);
+	void exitClassBody(TigerParser.ClassBodyContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code LetExp}
-	 * labeled alternative in {@link TigerParser#exp}.
+	 * Enter a parse tree produced by {@link TigerParser#interfaceBody}.
 	 * @param ctx the parse tree
 	 */
-	void enterLetExp(TigerParser.LetExpContext ctx);
+	void enterInterfaceBody(TigerParser.InterfaceBodyContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code LetExp}
-	 * labeled alternative in {@link TigerParser#exp}.
+	 * Exit a parse tree produced by {@link TigerParser#interfaceBody}.
 	 * @param ctx the parse tree
 	 */
-	void exitLetExp(TigerParser.LetExpContext ctx);
+	void exitInterfaceBody(TigerParser.InterfaceBodyContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code SeqExp}
-	 * labeled alternative in {@link TigerParser#exp}.
+	 * Enter a parse tree produced by {@link TigerParser#interfaceBodyDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterSeqExp(TigerParser.SeqExpContext ctx);
+	void enterInterfaceBodyDeclaration(TigerParser.InterfaceBodyDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code SeqExp}
-	 * labeled alternative in {@link TigerParser#exp}.
+	 * Exit a parse tree produced by {@link TigerParser#interfaceBodyDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitSeqExp(TigerParser.SeqExpContext ctx);
+	void exitInterfaceBodyDeclaration(TigerParser.InterfaceBodyDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code BinaryExp}
-	 * labeled alternative in {@link TigerParser#exp}.
+	 * Enter a parse tree produced by {@link TigerParser#interfaceMethodDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterBinaryExp(TigerParser.BinaryExpContext ctx);
+	void enterInterfaceMethodDeclaration(TigerParser.InterfaceMethodDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code BinaryExp}
-	 * labeled alternative in {@link TigerParser#exp}.
+	 * Exit a parse tree produced by {@link TigerParser#interfaceMethodDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitBinaryExp(TigerParser.BinaryExpContext ctx);
+	void exitInterfaceMethodDeclaration(TigerParser.InterfaceMethodDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link TigerParser#declaration}.
+	 * Enter a parse tree produced by {@link TigerParser#interfaceFieldDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterDeclaration(TigerParser.DeclarationContext ctx);
+	void enterInterfaceFieldDeclaration(TigerParser.InterfaceFieldDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link TigerParser#declaration}.
+	 * Exit a parse tree produced by {@link TigerParser#interfaceFieldDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitDeclaration(TigerParser.DeclarationContext ctx);
+	void exitInterfaceFieldDeclaration(TigerParser.InterfaceFieldDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link TigerParser#varDec}.
+	 * Enter a parse tree produced by {@link TigerParser#classBodyDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterVarDec(TigerParser.VarDecContext ctx);
+	void enterClassBodyDeclaration(TigerParser.ClassBodyDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link TigerParser#varDec}.
+	 * Exit a parse tree produced by {@link TigerParser#classBodyDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitVarDec(TigerParser.VarDecContext ctx);
+	void exitClassBodyDeclaration(TigerParser.ClassBodyDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link TigerParser#functionDec}.
+	 * Enter a parse tree produced by {@link TigerParser#memberDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterFunctionDec(TigerParser.FunctionDecContext ctx);
+	void enterMemberDeclaration(TigerParser.MemberDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link TigerParser#functionDec}.
+	 * Exit a parse tree produced by {@link TigerParser#memberDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitFunctionDec(TigerParser.FunctionDecContext ctx);
+	void exitMemberDeclaration(TigerParser.MemberDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link TigerParser#typeDec}.
+	 * Enter a parse tree produced by {@link TigerParser#methodDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterTypeDec(TigerParser.TypeDecContext ctx);
+	void enterMethodDeclaration(TigerParser.MethodDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link TigerParser#typeDec}.
+	 * Exit a parse tree produced by {@link TigerParser#methodDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitTypeDec(TigerParser.TypeDecContext ctx);
+	void exitMethodDeclaration(TigerParser.MethodDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code NameTy}
-	 * labeled alternative in {@link TigerParser#type}.
+	 * Enter a parse tree produced by {@link TigerParser#methodBody}.
 	 * @param ctx the parse tree
 	 */
-	void enterNameTy(TigerParser.NameTyContext ctx);
+	void enterMethodBody(TigerParser.MethodBodyContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code NameTy}
-	 * labeled alternative in {@link TigerParser#type}.
+	 * Exit a parse tree produced by {@link TigerParser#methodBody}.
 	 * @param ctx the parse tree
 	 */
-	void exitNameTy(TigerParser.NameTyContext ctx);
+	void exitMethodBody(TigerParser.MethodBodyContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code ArrayTy}
-	 * labeled alternative in {@link TigerParser#type}.
+	 * Enter a parse tree produced by {@link TigerParser#fieldDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterArrayTy(TigerParser.ArrayTyContext ctx);
+	void enterFieldDeclaration(TigerParser.FieldDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code ArrayTy}
-	 * labeled alternative in {@link TigerParser#type}.
+	 * Exit a parse tree produced by {@link TigerParser#fieldDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitArrayTy(TigerParser.ArrayTyContext ctx);
+	void exitFieldDeclaration(TigerParser.FieldDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code RecordTy}
-	 * labeled alternative in {@link TigerParser#type}.
+	 * Enter a parse tree produced by {@link TigerParser#constructorDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterRecordTy(TigerParser.RecordTyContext ctx);
+	void enterConstructorDeclaration(TigerParser.ConstructorDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code RecordTy}
-	 * labeled alternative in {@link TigerParser#type}.
+	 * Exit a parse tree produced by {@link TigerParser#constructorDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitRecordTy(TigerParser.RecordTyContext ctx);
+	void exitConstructorDeclaration(TigerParser.ConstructorDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link TigerParser#typeFields}.
+	 * Enter a parse tree produced by {@link TigerParser#constructorBody}.
 	 * @param ctx the parse tree
 	 */
-	void enterTypeFields(TigerParser.TypeFieldsContext ctx);
+	void enterConstructorBody(TigerParser.ConstructorBodyContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link TigerParser#typeFields}.
+	 * Exit a parse tree produced by {@link TigerParser#constructorBody}.
 	 * @param ctx the parse tree
 	 */
-	void exitTypeFields(TigerParser.TypeFieldsContext ctx);
+	void exitConstructorBody(TigerParser.ConstructorBodyContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link TigerParser#operator}.
+	 * Enter a parse tree produced by {@link TigerParser#formalParameters}.
 	 * @param ctx the parse tree
 	 */
-	void enterOperator(TigerParser.OperatorContext ctx);
+	void enterFormalParameters(TigerParser.FormalParametersContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link TigerParser#operator}.
+	 * Exit a parse tree produced by {@link TigerParser#formalParameters}.
 	 * @param ctx the parse tree
 	 */
-	void exitOperator(TigerParser.OperatorContext ctx);
+	void exitFormalParameters(TigerParser.FormalParametersContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#formalParameterList}.
+	 * @param ctx the parse tree
+	 */
+	void enterFormalParameterList(TigerParser.FormalParameterListContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#formalParameterList}.
+	 * @param ctx the parse tree
+	 */
+	void exitFormalParameterList(TigerParser.FormalParameterListContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#formalParameter}.
+	 * @param ctx the parse tree
+	 */
+	void enterFormalParameter(TigerParser.FormalParameterContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#formalParameter}.
+	 * @param ctx the parse tree
+	 */
+	void exitFormalParameter(TigerParser.FormalParameterContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#block}.
+	 * @param ctx the parse tree
+	 */
+	void enterBlock(TigerParser.BlockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#block}.
+	 * @param ctx the parse tree
+	 */
+	void exitBlock(TigerParser.BlockContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#blockStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterBlockStatement(TigerParser.BlockStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#blockStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitBlockStatement(TigerParser.BlockStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#localVariableDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void enterLocalVariableDeclaration(TigerParser.LocalVariableDeclarationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#localVariableDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void exitLocalVariableDeclaration(TigerParser.LocalVariableDeclarationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterStatement(TigerParser.StatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitStatement(TigerParser.StatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#forControl}.
+	 * @param ctx the parse tree
+	 */
+	void enterForControl(TigerParser.ForControlContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#forControl}.
+	 * @param ctx the parse tree
+	 */
+	void exitForControl(TigerParser.ForControlContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#forInit}.
+	 * @param ctx the parse tree
+	 */
+	void enterForInit(TigerParser.ForInitContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#forInit}.
+	 * @param ctx the parse tree
+	 */
+	void exitForInit(TigerParser.ForInitContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#forUpdate}.
+	 * @param ctx the parse tree
+	 */
+	void enterForUpdate(TigerParser.ForUpdateContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#forUpdate}.
+	 * @param ctx the parse tree
+	 */
+	void exitForUpdate(TigerParser.ForUpdateContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#parExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterParExpression(TigerParser.ParExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#parExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitParExpression(TigerParser.ParExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpression(TigerParser.ExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpression(TigerParser.ExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#primary}.
+	 * @param ctx the parse tree
+	 */
+	void enterPrimary(TigerParser.PrimaryContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#primary}.
+	 * @param ctx the parse tree
+	 */
+	void exitPrimary(TigerParser.PrimaryContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#creator}.
+	 * @param ctx the parse tree
+	 */
+	void enterCreator(TigerParser.CreatorContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#creator}.
+	 * @param ctx the parse tree
+	 */
+	void exitCreator(TigerParser.CreatorContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#createdName}.
+	 * @param ctx the parse tree
+	 */
+	void enterCreatedName(TigerParser.CreatedNameContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#createdName}.
+	 * @param ctx the parse tree
+	 */
+	void exitCreatedName(TigerParser.CreatedNameContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#arrayCreatorRest}.
+	 * @param ctx the parse tree
+	 */
+	void enterArrayCreatorRest(TigerParser.ArrayCreatorRestContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#arrayCreatorRest}.
+	 * @param ctx the parse tree
+	 */
+	void exitArrayCreatorRest(TigerParser.ArrayCreatorRestContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#classCreatorRest}.
+	 * @param ctx the parse tree
+	 */
+	void enterClassCreatorRest(TigerParser.ClassCreatorRestContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#classCreatorRest}.
+	 * @param ctx the parse tree
+	 */
+	void exitClassCreatorRest(TigerParser.ClassCreatorRestContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#methodCall}.
+	 * @param ctx the parse tree
+	 */
+	void enterMethodCall(TigerParser.MethodCallContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#methodCall}.
+	 * @param ctx the parse tree
+	 */
+	void exitMethodCall(TigerParser.MethodCallContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#arguments}.
+	 * @param ctx the parse tree
+	 */
+	void enterArguments(TigerParser.ArgumentsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#arguments}.
+	 * @param ctx the parse tree
+	 */
+	void exitArguments(TigerParser.ArgumentsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#expressionList}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpressionList(TigerParser.ExpressionListContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#expressionList}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpressionList(TigerParser.ExpressionListContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#classModifier}.
+	 * @param ctx the parse tree
+	 */
+	void enterClassModifier(TigerParser.ClassModifierContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#classModifier}.
+	 * @param ctx the parse tree
+	 */
+	void exitClassModifier(TigerParser.ClassModifierContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#interfaceModifier}.
+	 * @param ctx the parse tree
+	 */
+	void enterInterfaceModifier(TigerParser.InterfaceModifierContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#interfaceModifier}.
+	 * @param ctx the parse tree
+	 */
+	void exitInterfaceModifier(TigerParser.InterfaceModifierContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#methodModifier}.
+	 * @param ctx the parse tree
+	 */
+	void enterMethodModifier(TigerParser.MethodModifierContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#methodModifier}.
+	 * @param ctx the parse tree
+	 */
+	void exitMethodModifier(TigerParser.MethodModifierContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#interfaceMethodModifier}.
+	 * @param ctx the parse tree
+	 */
+	void enterInterfaceMethodModifier(TigerParser.InterfaceMethodModifierContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#interfaceMethodModifier}.
+	 * @param ctx the parse tree
+	 */
+	void exitInterfaceMethodModifier(TigerParser.InterfaceMethodModifierContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#fieldModifier}.
+	 * @param ctx the parse tree
+	 */
+	void enterFieldModifier(TigerParser.FieldModifierContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#fieldModifier}.
+	 * @param ctx the parse tree
+	 */
+	void exitFieldModifier(TigerParser.FieldModifierContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#constructorModifier}.
+	 * @param ctx the parse tree
+	 */
+	void enterConstructorModifier(TigerParser.ConstructorModifierContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#constructorModifier}.
+	 * @param ctx the parse tree
+	 */
+	void exitConstructorModifier(TigerParser.ConstructorModifierContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#variableModifier}.
+	 * @param ctx the parse tree
+	 */
+	void enterVariableModifier(TigerParser.VariableModifierContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#variableModifier}.
+	 * @param ctx the parse tree
+	 */
+	void exitVariableModifier(TigerParser.VariableModifierContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#type}.
+	 * @param ctx the parse tree
+	 */
+	void enterType(TigerParser.TypeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#type}.
+	 * @param ctx the parse tree
+	 */
+	void exitType(TigerParser.TypeContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#primitiveType}.
+	 * @param ctx the parse tree
+	 */
+	void enterPrimitiveType(TigerParser.PrimitiveTypeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#primitiveType}.
+	 * @param ctx the parse tree
+	 */
+	void exitPrimitiveType(TigerParser.PrimitiveTypeContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#classType}.
+	 * @param ctx the parse tree
+	 */
+	void enterClassType(TigerParser.ClassTypeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#classType}.
+	 * @param ctx the parse tree
+	 */
+	void exitClassType(TigerParser.ClassTypeContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#typeList}.
+	 * @param ctx the parse tree
+	 */
+	void enterTypeList(TigerParser.TypeListContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#typeList}.
+	 * @param ctx the parse tree
+	 */
+	void exitTypeList(TigerParser.TypeListContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#typeTypeOrVoid}.
+	 * @param ctx the parse tree
+	 */
+	void enterTypeTypeOrVoid(TigerParser.TypeTypeOrVoidContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#typeTypeOrVoid}.
+	 * @param ctx the parse tree
+	 */
+	void exitTypeTypeOrVoid(TigerParser.TypeTypeOrVoidContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#qualifiedName}.
+	 * @param ctx the parse tree
+	 */
+	void enterQualifiedName(TigerParser.QualifiedNameContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#qualifiedName}.
+	 * @param ctx the parse tree
+	 */
+	void exitQualifiedName(TigerParser.QualifiedNameContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#qualifiedNameList}.
+	 * @param ctx the parse tree
+	 */
+	void enterQualifiedNameList(TigerParser.QualifiedNameListContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#qualifiedNameList}.
+	 * @param ctx the parse tree
+	 */
+	void exitQualifiedNameList(TigerParser.QualifiedNameListContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#variableDeclarators}.
+	 * @param ctx the parse tree
+	 */
+	void enterVariableDeclarators(TigerParser.VariableDeclaratorsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#variableDeclarators}.
+	 * @param ctx the parse tree
+	 */
+	void exitVariableDeclarators(TigerParser.VariableDeclaratorsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#variableDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void enterVariableDeclarator(TigerParser.VariableDeclaratorContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#variableDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void exitVariableDeclarator(TigerParser.VariableDeclaratorContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#variableDeclaratorId}.
+	 * @param ctx the parse tree
+	 */
+	void enterVariableDeclaratorId(TigerParser.VariableDeclaratorIdContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#variableDeclaratorId}.
+	 * @param ctx the parse tree
+	 */
+	void exitVariableDeclaratorId(TigerParser.VariableDeclaratorIdContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#variableInitializer}.
+	 * @param ctx the parse tree
+	 */
+	void enterVariableInitializer(TigerParser.VariableInitializerContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#variableInitializer}.
+	 * @param ctx the parse tree
+	 */
+	void exitVariableInitializer(TigerParser.VariableInitializerContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TigerParser#arrayInitializer}.
+	 * @param ctx the parse tree
+	 */
+	void enterArrayInitializer(TigerParser.ArrayInitializerContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TigerParser#arrayInitializer}.
+	 * @param ctx the parse tree
+	 */
+	void exitArrayInitializer(TigerParser.ArrayInitializerContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TigerParser#literal}.
 	 * @param ctx the parse tree

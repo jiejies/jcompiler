@@ -1,19 +1,31 @@
 package org.tiger;
 
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.tree.*;
-//测试程序
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
+
 public class Main {
     public static void main(String[] args) {
         try {
-            // 创建一个简单的测试程序
-            String input = "var x = 10;\n" +
-                          "var y = 5;\n" +
-                          "print(x + y);\n" +
-                          "if x > y then print(x) else print(y);\n" +
-                          "while x > 0 do x = x - 1;\n" +
-                          "for i = 1 to 5 do print(i);\n" +
-                          "let var z = 15 in print(z) end;";
+            // 创建一个简单的Java测试程序
+            String input = "package org.example;\n\n" +
+                          "import java.util.List;\n" +
+                          "import java.util.ArrayList;\n\n" +
+                          "public class HelloWorld {\n" +
+                          "    private String message;\n\n" +
+                          "    public HelloWorld(String message) {\n" +
+                          "        this.message = message;\n" +
+                          "    }\n\n" +
+                          "    public void sayHello() {\n" +
+                          "        System.out.println(message);\n" +
+                          "    }\n\n" +
+                          "    public static void main(String[] args) {\n" +
+                          "        HelloWorld hello = new HelloWorld(\"Hello, World!\");\n" +
+                          "        hello.sayHello();\n" +
+                          "    }\n" +
+                          "}";
             
             // 创建输入流
             CharStream inputStream = CharStreams.fromString(input);
@@ -27,18 +39,33 @@ public class Main {
             // 创建语法分析器
             TigerParser parser = new TigerParser(tokens);
             
-            // 开始解析
-            ParseTree tree = parser.program();
+            // 开始解析，从compilationUnit规则开始
+            ParseTree tree = parser.compilationUnit();
             
             // 打印语法树
             System.out.println("Parse Tree:");
-            System.out.println(tree.toStringTree(parser));
+            System.out.println(formatParseTree(tree, parser, 0));
             
             // 创建访问者
             TigerBaseVisitor<String> visitor = new TigerBaseVisitor<String>() {
                 @Override
-                public String visitProgram(TigerParser.ProgramContext ctx) {
-                    return "Program: " + ctx.exp().getText();
+                public String visitCompilationUnit(TigerParser.CompilationUnitContext ctx) {
+                    StringBuilder result = new StringBuilder();
+                    if (ctx.packageDeclaration() != null) {
+                        result.append("Package: ").append(ctx.packageDeclaration().qualifiedName().getText()).append("\n");
+                    }
+                    
+                    for (TigerParser.ImportDeclarationContext importCtx : ctx.importDeclaration()) {
+                        result.append("Import: ").append(importCtx.qualifiedName().getText()).append("\n");
+                    }
+                    
+                    for (TigerParser.TypeDeclarationContext typeCtx : ctx.typeDeclaration()) {
+                        if (typeCtx.classDeclaration() != null) {
+                            result.append("Class: ").append(typeCtx.classDeclaration().IDENTIFIER().getText()).append("\n");
+                        }
+                    }
+                    
+                    return result.toString();
                 }
             };
             
@@ -51,5 +78,31 @@ public class Main {
             System.err.println("Error: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    // 格式化语法树的辅助方法
+    private static String formatParseTree(ParseTree tree, TigerParser parser, int level) {
+        StringBuilder result = new StringBuilder();
+        String indent = "  ".repeat(level);  // 每一层缩进两个空格
+        
+        if (tree instanceof ParserRuleContext) {
+            String ruleName = parser.getRuleNames()[((ParserRuleContext) tree).getRuleIndex()];
+            result.append(indent).append(ruleName).append(" {\n");
+            
+            // 递归处理所有子节点
+            for (int i = 0; i < tree.getChildCount(); i++) {
+                result.append(formatParseTree(tree.getChild(i), parser, level + 1));
+            }
+            
+            result.append(indent).append("}\n");
+        } else {
+            // 处理终结符
+            String nodeText = tree.getText();
+            if (!nodeText.trim().isEmpty()) {
+                result.append(indent).append("'").append(nodeText).append("'\n");
+            }
+        }
+        
+        return result.toString();
     }
 } 
