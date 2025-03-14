@@ -110,6 +110,7 @@
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
             
@@ -117,9 +118,9 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>3.5.0</version>
+                <version>3.1.0</version>
                 <configuration>
-                    <mainClass>org.tiger.Main</mainClass>
+                    <charset>UTF-8</charset>
                 </configuration>
             </plugin>
         </plugins>
