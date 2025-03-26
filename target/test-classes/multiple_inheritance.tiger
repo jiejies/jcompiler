@@ -1,0 +1,21 @@
+class Animal {
+    String name;
+    
+    void makeSound() {
+        // 方法体将在后续实现
+    }
+}
+
+class Mammal extends Animal {
+    String furColor;
+    
+    void feed() {
+        // 方法体将在后续实现
+    }
+}
+
+class Dog extends Mammal {
+    void bark() {
+        // 方法体将在后续实现
+    }
+} 

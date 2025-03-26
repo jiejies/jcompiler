@@ -1,0 +1,20 @@
+class Animal {
+    String name;
+    int age;
+    
+    void makeSound() {
+        // 方法体将在后续实现
+    }
+}
+
+class Dog extends Animal {
+    void bark() {
+        // 方法体将在后续实现
+    }
+}
+
+class Cat extends Animal {
+    void meow() {
+        // 方法体将在后续实现
+    }
+} 
