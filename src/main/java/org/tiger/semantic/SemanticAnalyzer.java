@@ -41,31 +41,67 @@ public class SemanticAnalyzer extends TigerBaseVisitor<Void> {
     private String getExpressionType(TigerParser.ExpressionContext expr) {
         if (expr == null) return null;
         
-        if (expr.primary() != null) {
-            if (expr.primary().literal() != null) {
-                // 处理字面量
-                String literal = expr.primary().literal().getText();
-                if (literal.matches("\\d+")) {
-                    return "int";
-                } else if (literal.equals("true") || literal.equals("false")) {
-                    return "boolean";
-                }
-            } else if (expr.primary().IDENTIFIER() != null) {
-                // 处理变量引用
-                String varName = expr.primary().IDENTIFIER().getText();
-                Object symbol = currentScope.resolve(varName);
-                if (symbol instanceof TigerParser.LocalVariableDeclarationContext) {
-                    TigerParser.LocalVariableDeclarationContext varDecl = 
-                        (TigerParser.LocalVariableDeclarationContext) symbol;
-                    return varDecl.type().getText();
-                }
+        // 处理字面量
+        if (expr.primary() != null && expr.primary().literal() != null) {
+            TigerParser.LiteralContext literal = expr.primary().literal();
+            if (literal.DECIMAL_LITERAL() != null || 
+                literal.HEX_LITERAL() != null || 
+                literal.OCT_LITERAL() != null || 
+                literal.BINARY_LITERAL() != null) {
+                return "int";
+            } else if (literal.BOOLEAN_LITERAL() != null) {
+                return "boolean";
+            } else if (literal.STRING_LITERAL() != null) {
+                return "String";
             }
-        } else if (expr.methodCall() != null) {
-            // 处理方法调用
+        }
+        
+        // 处理变量引用
+        if (expr.primary() != null && expr.primary().IDENTIFIER() != null) {
+            String varName = expr.primary().IDENTIFIER().getText();
+            Object varDecl = currentScope.resolve(varName);
+            
+            if (varDecl instanceof TigerParser.LocalVariableDeclarationContext) {
+                return ((TigerParser.LocalVariableDeclarationContext) varDecl).type().getText();
+            } else if (varDecl instanceof TigerParser.FormalParameterContext) {
+                return ((TigerParser.FormalParameterContext) varDecl).type().getText();
+            } else if (varDecl instanceof TigerParser.FieldDeclarationContext) {
+                return ((TigerParser.FieldDeclarationContext) varDecl).type().getText();
+            }
+        }
+        
+        // 处理方法调用
+        if (expr.methodCall() != null) {
             String methodName = expr.methodCall().IDENTIFIER().getText();
             TigerParser.MethodDeclarationContext methodDecl = methodDeclarations.get(methodName);
             if (methodDecl != null) {
                 return methodDecl.typeTypeOrVoid().getText();
+            }
+        }
+        
+        // 处理二元运算
+        if (expr.getChildCount() == 3 && expr.getChild(1) != null) {
+            String operator = expr.getChild(1).getText();
+            String leftType = getExpressionType((TigerParser.ExpressionContext)expr.getChild(0));
+            String rightType = getExpressionType((TigerParser.ExpressionContext)expr.getChild(2));
+            
+            // 算术运算符
+            if (operator.matches("[+\\-*/]")) {
+                if ("int".equals(leftType) && "int".equals(rightType)) {
+                    return "int";
+                }
+            }
+            // 比较运算符
+            else if (operator.matches("==|!=|<|>|<=|>=")) {
+                if (isTypeCompatible(leftType, rightType)) {
+                    return "boolean";
+                }
+            }
+            // 逻辑运算符
+            else if (operator.matches("&&|\\|\\|")) {
+                if ("boolean".equals(leftType) && "boolean".equals(rightType)) {
+                    return "boolean";
+                }
             }
         }
         
@@ -85,14 +121,43 @@ public class SemanticAnalyzer extends TigerBaseVisitor<Void> {
         
         // 创建新的作用域
         Scope classScope = new Scope(currentScope);
-        currentScope.define(className, ctx); // 在当前作用域中记录类定义
+        
+        // 在当前作用域中记录类定义
+        currentScope.define(className, ctx);
         
         // 切换到类作用域
         Scope previousScope = currentScope;
         currentScope = classScope;
         
-        // 访问类成员
-        visitChildren(ctx);
+        // 先处理所有字段声明
+        if (ctx.classBody() != null) {
+            for (TigerParser.ClassBodyDeclarationContext member : ctx.classBody().classBodyDeclaration()) {
+                if (member.memberDeclaration() != null && 
+                    member.memberDeclaration().fieldDeclaration() != null) {
+                    TigerParser.FieldDeclarationContext field = member.memberDeclaration().fieldDeclaration();
+                    String fieldType = field.type().getText();
+                    for (TigerParser.VariableDeclaratorContext declarator : field.variableDeclarators().variableDeclarator()) {
+                        String fieldName = declarator.variableDeclaratorId().IDENTIFIER().getText();
+                        if (classScope.isDefined(fieldName)) {
+                            addError(declarator.variableDeclaratorId().IDENTIFIER().getSymbol(),
+                                "Field '" + fieldName + "' is already defined in class '" + className + "'");
+                        } else {
+                            classScope.define(fieldName, field);
+                        }
+                    }
+                }
+            }
+        }
+        
+        // 访问类成员（方法等）
+        if (ctx.classBody() != null) {
+            for (TigerParser.ClassBodyDeclarationContext member : ctx.classBody().classBodyDeclaration()) {
+                if (member.memberDeclaration() != null && 
+                    member.memberDeclaration().methodDeclaration() != null) {
+                    visit(member.memberDeclaration().methodDeclaration());
+                }
+            }
+        }
         
         // 恢复作用域
         currentScope = previousScope;
@@ -112,18 +177,28 @@ public class SemanticAnalyzer extends TigerBaseVisitor<Void> {
         // 记录方法声明，用于后续的方法调用检查
         methodDeclarations.put(methodName, ctx);
         
-        // 创建方法作用域
+        // 创建方法作用域，继承类作用域
         Scope methodScope = new Scope(currentScope);
+        
+        // 先处理参数，将参数添加到方法作用域中
+        if (ctx.formalParameters() != null && ctx.formalParameters().formalParameterList() != null) {
+            for (TigerParser.FormalParameterContext param : ctx.formalParameters().formalParameterList().formalParameter()) {
+                String paramName = param.variableDeclaratorId().IDENTIFIER().getText();
+                if (methodScope.isDefined(paramName)) {
+                    addError(param.variableDeclaratorId().IDENTIFIER().getSymbol(),
+                        "Parameter '" + paramName + "' is already defined");
+                } else {
+                    methodScope.define(paramName, param);
+                }
+            }
+        }
+        
+        // 在当前作用域中定义方法
         currentScope.define(methodName, ctx);
         
         // 切换到方法作用域
         Scope previousScope = currentScope;
         currentScope = methodScope;
-        
-        // 处理参数
-        if (ctx.formalParameters() != null) {
-            visitFormalParameters(ctx.formalParameters());
-        }
         
         // 访问方法体
         if (ctx.methodBody() != null) {
@@ -223,8 +298,9 @@ public class SemanticAnalyzer extends TigerBaseVisitor<Void> {
         if (ctx.IDENTIFIER() != null) {
             String varName = ctx.IDENTIFIER().getText();
             
-            // 检查变量是否已定义
-            if (!currentScope.isDefined(varName)) {
+            // 检查变量是否已定义（包括类字段、方法参数和局部变量）
+            Object varDecl = currentScope.resolve(varName);
+            if (varDecl == null) {
                 addError(ctx.IDENTIFIER().getSymbol(), 
                     "Variable '" + varName + "' is used before declaration");
             }

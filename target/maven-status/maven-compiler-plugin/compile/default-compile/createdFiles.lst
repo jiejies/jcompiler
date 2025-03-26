@@ -20,6 +20,7 @@ org\tiger\TigerParser$ForControlContext.class
 org\tiger\TigerParser$ConstructorBodyContext.class
 org\tiger\ast\Ast.class
 org\tiger\ast\MethodDecl.class
+org\tiger\semantic\SemanticTest$1.class
 org\tiger\TigerParser$StatementContext.class
 org\tiger\TigerParser$ImportDeclarationContext.class
 org\tiger\TigerParser$MethodCallContext.class
