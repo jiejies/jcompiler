@@ -1,7 +1,6 @@
 package org.tiger.ast;
 
 import java.util.List;
-import java.util.ArrayList;
 
 // AST基类
 public abstract class Ast {

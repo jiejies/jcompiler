@@ -1,0 +1,4 @@
+digraph CFG {
+  entry [label="entry\n"];
+  exit [label="exit\n"];
+}
