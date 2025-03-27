@@ -21,6 +21,7 @@ org\tiger\ast\NewArray.class
 org\tiger\TigerParser$ForControlContext.class
 org\tiger\cfg\statements\ReturnStatement.class
 org\tiger\TigerParser$ConstructorBodyContext.class
+org\tiger\cfg\StatementFactory$1.class
 org\tiger\ast\Ast.class
 org\tiger\ast\MethodDecl.class
 org\tiger\cfg\Statement.class
@@ -51,7 +52,6 @@ org\tiger\TigerParser$LocalVariableDeclarationContext.class
 org\tiger\TigerVisitor.class
 org\tiger\cfg\ClassNode$Method.class
 org\tiger\ast\Times.class
-org\tiger\Main$1.class
 org\tiger\TigerParser$ArrayCreatorRestContext.class
 org\tiger\TigerParser$ArrayInitializerContext.class
 org\tiger\semantic\SemanticTest.class
@@ -94,7 +94,6 @@ org\tiger\ast\Not.class
 org\tiger\TigerParser$FormalParameterContext.class
 org\tiger\TigerParser$VariableModifierContext.class
 org\tiger\ast\PrettyPrinter.class
-org\tiger\Main.class
 org\tiger\TigerParser$VariableInitializerContext.class
 org\tiger\TigerParser$InterfaceModifierContext.class
 org\tiger\ast\True.class
