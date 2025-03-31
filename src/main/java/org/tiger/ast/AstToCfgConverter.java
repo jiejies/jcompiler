@@ -41,12 +41,12 @@ public class AstToCfgConverter implements AstVisitor {
 
     @Override
     public void visit(Program n) {
-        // 处理主类
-        n.mainClass.accept(this);
-        // 处理其他类
+        // 先处理其他类
         for (ClassDecl classDecl : n.classes) {
             classDecl.accept(this);
         }
+        // 最后处理主类
+        n.mainClass.accept(this);
     }
 
     @Override
@@ -76,7 +76,8 @@ public class AstToCfgConverter implements AstVisitor {
 
     @Override
     public void visit(MethodDecl n) {
-        currentCFG = new CFG(n.name);
+        String methodName = n.name;
+        currentCFG = new CFG(methodName);
         currentBlock = createBlock();
         currentCFG.setEntryBlock(currentBlock);
         currentCFG.addBlock(currentBlock);
@@ -95,12 +96,15 @@ public class AstToCfgConverter implements AstVisitor {
         
         // 设置出口块
         currentCFG.setExitBlock(currentBlock);
-        methodCFGs.put(currentCFG.getMethodName(), currentCFG);
+        methodCFGs.put(methodName, currentCFG);
         isInMethod = false;
     }
 
     @Override
     public void visit(Block n) {
+        ensureCFGExists();
+        
+        // 处理块中的每个语句
         for (org.tiger.ast.Statement stmt : n.statements) {
             stmt.accept(this);
         }
@@ -148,27 +152,38 @@ public class AstToCfgConverter implements AstVisitor {
     public void visit(While n) {
         ensureCFGExists();
         
-        // 1. 创建循环头块
-        BasicBlock headerBlock = createBlock();
-        currentCFG.addBlock(headerBlock);
-        
-        // 2. 创建条件块
+        // 1. 创建条件块
         BasicBlock conditionBlock = createBlock();
         currentCFG.addBlock(conditionBlock);
-        conditionBlock.addStatement(convertCondition(n.condition));
+        Statement condStmt = convertCondition(n.condition);
+        if (condStmt != null) {
+            conditionBlock.addStatement(condStmt);
+        }
         
-        // 3. 创建循环体块
+        // 2. 创建循环体块
         BasicBlock bodyBlock = createBlock();
         currentCFG.addBlock(bodyBlock);
+        BasicBlock savedCurrentBlock = currentBlock;  // 保存当前块
         currentBlock = bodyBlock;
         n.body.accept(this);
         
-        // 4. 构建控制流
-        headerBlock.addSuccessor(conditionBlock);
-        conditionBlock.addSuccessor(bodyBlock);
-        bodyBlock.addSuccessor(headerBlock);
+        // 3. 创建合并块（循环结束后的块）
+        BasicBlock mergeBlock = createBlock();
+        currentCFG.addBlock(mergeBlock);
         
-        currentBlock = conditionBlock;
+        // 4. 构建控制流
+        savedCurrentBlock.addSuccessor(conditionBlock);  // 从当前块连接到条件块
+        conditionBlock.addSuccessor(bodyBlock);         // 条件为真时进入循环体
+        conditionBlock.addSuccessor(mergeBlock);        // 条件为假时退出循环
+        bodyBlock.addSuccessor(conditionBlock);         // 循环体结束后回到条件块
+        
+        currentBlock = mergeBlock;  // 设置当前块为合并块
+        
+        // 打印调试信息
+        System.out.println("条件块的后继数量：" + conditionBlock.getSuccessors().size());
+        for (BasicBlock succ : conditionBlock.getSuccessors()) {
+            System.out.println("后继块：" + succ.getLabel());
+        }
     }
 
     @Override
@@ -400,8 +415,30 @@ public class AstToCfgConverter implements AstVisitor {
             String left = convertExpression(lt.left);
             String right = convertExpression(lt.right);
             return new LessThanStatement(left, right);
+        } else if (condition instanceof And) {
+            And and = (And) condition;
+            String left = convertExpression(and.left);
+            String right = convertExpression(and.right);
+            return new AndStatement(left, right);
+        } else if (condition instanceof Not) {
+            Not not = (Not) condition;
+            String operand = convertExpression(not.exp);
+            return new NotStatement(operand);
+        } else if (condition instanceof True) {
+            return new TrueStatement();
+        } else if (condition instanceof False) {
+            return new FalseStatement();
+        } else if (condition instanceof IdentifierExp) {
+            return new IdentifierStatement(((IdentifierExp) condition).name);
+        } else if (condition instanceof Call) {
+            Call call = (Call) condition;
+            List<String> args = new ArrayList<>();
+            for (Expression arg : call.args) {
+                args.add(convertExpression(arg));
+            }
+            String target = convertExpression(call.object);
+            return new CallStatement(target, call.method, args);
         }
-        // ... 处理其他类型的条件
         return null;
     }
 
@@ -426,6 +463,30 @@ public class AstToCfgConverter implements AstVisitor {
             // 生成临时变量来存储方法调用的结果
             String tempVar = "_t" + (blockCounter++);
             Statement stmt = new CallStatement(target, call.method, args);
+            currentBlock.addStatement(stmt);
+            return tempVar;
+        } else if (exp instanceof Plus) {
+            Plus plus = (Plus) exp;
+            String left = convertExpression(plus.left);
+            String right = convertExpression(plus.right);
+            String tempVar = "_t" + (blockCounter++);
+            Statement stmt = new PlusStatement(left, right);
+            currentBlock.addStatement(stmt);
+            return tempVar;
+        } else if (exp instanceof Minus) {
+            Minus minus = (Minus) exp;
+            String left = convertExpression(minus.left);
+            String right = convertExpression(minus.right);
+            String tempVar = "_t" + (blockCounter++);
+            Statement stmt = new MinusStatement(left, right);
+            currentBlock.addStatement(stmt);
+            return tempVar;
+        } else if (exp instanceof Times) {
+            Times times = (Times) exp;
+            String left = convertExpression(times.left);
+            String right = convertExpression(times.right);
+            String tempVar = "_t" + (blockCounter++);
+            Statement stmt = new TimesStatement(left, right);
             currentBlock.addStatement(stmt);
             return tempVar;
         }

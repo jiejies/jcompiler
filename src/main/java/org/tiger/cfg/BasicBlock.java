@@ -21,11 +21,16 @@ public class BasicBlock {
     }
 
     public void addPredecessor(BasicBlock pred) {
-        preds.add(pred);
+        if (!preds.contains(pred)) {  // 避免重复添加
+            preds.add(pred);
+        }
     }
 
     public void addSuccessor(BasicBlock succ) {
-        succs.add(succ);
+        if (!succs.contains(succ)) {  // 避免重复添加
+            succs.add(succ);
+            succ.addPredecessor(this);
+        }
     }
 
     public String getLabel() {

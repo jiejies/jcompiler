@@ -13,21 +13,26 @@ public class ParseTreeToAstConverter extends TigerBaseVisitor<Ast> {
         MainClass mainClass = null;
         List<ClassDecl> classes = new ArrayList<>();
         
-        // 处理主类
+        // 处理所有类声明
         for (TigerParser.TypeDeclarationContext typeDecl : ctx.typeDeclaration()) {
             if (typeDecl.classDeclaration() != null) {
                 ClassDecl classDecl = (ClassDecl) visit(typeDecl.classDeclaration());
-                if (mainClass == null) {
-                    // 第一个类作为主类
+                if (classDecl.name.endsWith("_main")) {
+                    // 如果是主类
                     mainClass = new MainClass(
                         classDecl.name,
                         "args",  // 默认参数名
-                        new Block(new ArrayList<>())  // 空语句块
+                        new Block(classDecl.methods.get(0).statements)  // 使用第一个方法的语句作为主方法
                     );
                 } else {
                     classes.add(classDecl);
                 }
             }
+        }
+        
+        // 确保主类存在
+        if (mainClass == null) {
+            throw new RuntimeException("没有找到主类");
         }
         
         return new Program(mainClass, classes);
@@ -61,7 +66,7 @@ public class ParseTreeToAstConverter extends TigerBaseVisitor<Ast> {
                         // 处理方法
                         TigerParser.MethodDeclarationContext method = member.memberDeclaration().methodDeclaration();
                         Type returnType = convertType(method.typeTypeOrVoid().type());
-                        String methodName = method.IDENTIFIER().getText();
+                        String methodName = className + "." + method.IDENTIFIER().getText();  // 添加类名前缀
                         
                         // 处理参数
                         List<VarDecl> params = new ArrayList<>();
@@ -82,7 +87,9 @@ public class ParseTreeToAstConverter extends TigerBaseVisitor<Ast> {
                             for (TigerParser.BlockStatementContext stmt : method.methodBody().block().blockStatement()) {
                                 if (stmt.statement() != null) {
                                     Statement astStmt = (Statement) visit(stmt.statement());
-                                    statements.add(astStmt);
+                                    if (astStmt != null) {  // 确保语句不为空
+                                        statements.add(astStmt);
+                                    }
                                 }
                             }
                         }
@@ -131,14 +138,27 @@ public class ParseTreeToAstConverter extends TigerBaseVisitor<Ast> {
             List<Statement> statements = new ArrayList<>();
             for (TigerParser.BlockStatementContext stmt : ctx.block().blockStatement()) {
                 if (stmt.statement() != null) {
-                    statements.add((Statement) visit(stmt.statement()));
+                    Statement astStmt = (Statement) visit(stmt.statement());
+                    if (astStmt != null) {
+                        statements.add(astStmt);
+                    }
                 }
             }
             return new Block(statements);
         } else if (ctx.expression() != null) {
-            // 将表达式语句包装在 Print 语句中
             Expression expr = (Expression) visit(ctx.expression());
+            // 所有表达式都包装在 Print 语句中
             return new Print(expr);
+        } else if (ctx.getChild(0).getText().equals("while")) {
+            Expression condition = (Expression) visit(ctx.parExpression());
+            Statement body = (Statement) visit(ctx.statement(0));
+            return new While(condition, body);
+        } else if (ctx.getChild(0).getText().equals("if")) {
+            Expression condition = (Expression) visit(ctx.parExpression());
+            Statement thenStmt = (Statement) visit(ctx.statement(0));
+            Statement elseStmt = ctx.statement(1) != null ?
+                (Statement) visit(ctx.statement(1)) : null;
+            return new If(condition, thenStmt, elseStmt);
         }
         return null;
     }

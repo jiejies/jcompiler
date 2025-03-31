@@ -235,6 +235,23 @@ class ArrayAssign extends Statement {
 // 表达式节点
 abstract class Expression extends Ast {}
 
+class Call extends Expression {
+    public Expression object;
+    public String method;
+    public List<Expression> args;
+
+    public Call(Expression object, String method, List<Expression> args) {
+        this.object = object;
+        this.method = method;
+        this.args = args;
+    }
+
+    @Override
+    public void accept(AstVisitor visitor) {
+        visitor.visit(this);
+    }
+}
+
 class And extends Expression {
     public Expression left, right;
 
@@ -325,23 +342,6 @@ class ArrayLength extends Expression {
 
     public ArrayLength(Expression array) {
         this.array = array;
-    }
-
-    @Override
-    public void accept(AstVisitor visitor) {
-        visitor.visit(this);
-    }
-}
-
-class Call extends Expression {
-    public Expression object;
-    public String method;
-    public List<Expression> args;
-
-    public Call(Expression object, String method, List<Expression> args) {
-        this.object = object;
-        this.method = method;
-        this.args = args;
     }
 
     @Override

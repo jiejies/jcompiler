@@ -1,0 +1,21 @@
+class Counter {
+    int count;
+    
+    Counter() {
+        count = 0;
+    }
+    
+    void increment() {
+        while (count < 10) {
+            count = count + 1;
+            print count;
+        }
+    }
+}
+
+class Counter_main {
+    public static void main(String[] args) {
+        Counter c = new Counter();
+        c.increment();
+    }
+} 
