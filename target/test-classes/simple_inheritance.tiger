@@ -3,18 +3,36 @@ class Animal {
     int age;
     
     void makeSound() {
-        // 方法体将在后续实现
+        age = age + 1;
+    }
+    
+    void setName(String newName) {
+        name = newName;
     }
 }
 
 class Dog extends Animal {
+    String breed;
+    
     void bark() {
-        // 方法体将在后续实现
+        age = age + 2;
+        makeSound();
+    }
+    
+    void setBreed(String newBreed) {
+        breed = newBreed;
     }
 }
 
 class Cat extends Animal {
+    boolean isIndoor;
+    
     void meow() {
-        // 方法体将在后续实现
+        age = age + 3;
+        makeSound();
+    }
+    
+    void setIndoor(boolean indoor) {
+        isIndoor = indoor;
     }
 } 

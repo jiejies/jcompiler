@@ -16,11 +16,13 @@ public class SemanticAnalyzer extends TigerBaseVisitor<Void> {
     private Scope currentScope;
     private final List<String> errors;
     private final Map<String, TigerParser.MethodDeclarationContext> methodDeclarations;
+    private final Map<String, Scope> classScopes;  // 存储类的作用域
     
     public SemanticAnalyzer() {
         this.currentScope = new Scope(null); // 创建全局作用域
         this.errors = new ArrayList<>();
         this.methodDeclarations = new HashMap<>();
+        this.classScopes = new HashMap<>();
     }
     
     public List<String> getErrors() {
@@ -110,7 +112,6 @@ public class SemanticAnalyzer extends TigerBaseVisitor<Void> {
     
     @Override
     public Void visitClassDeclaration(TigerParser.ClassDeclarationContext ctx) {
-        // 获取类名
         String className = ctx.IDENTIFIER().getText();
         
         // 检查类名是否已定义
@@ -119,8 +120,22 @@ public class SemanticAnalyzer extends TigerBaseVisitor<Void> {
             return null;
         }
         
-        // 创建新的作用域
+        // 创建类作用域
         Scope classScope = new Scope(currentScope);
+        classScopes.put(className, classScope);
+        
+        // 处理继承
+        if (ctx.type() != null) {  // 如果有extends子句
+            String parentClassName = ctx.type().getText();
+            Scope parentScope = classScopes.get(parentClassName);
+            if (parentScope == null) {
+                addError(ctx.type().getStart(), "Parent class '" + parentClassName + "' is not defined");
+            } else {
+                // 将父类作用域设置为当前类作用域的父作用域
+                classScope = new Scope(parentScope);
+                classScopes.put(className, classScope);
+            }
+        }
         
         // 在当前作用域中记录类定义
         currentScope.define(className, ctx);
@@ -129,8 +144,9 @@ public class SemanticAnalyzer extends TigerBaseVisitor<Void> {
         Scope previousScope = currentScope;
         currentScope = classScope;
         
-        // 先处理所有字段声明
+        // 处理类成员
         if (ctx.classBody() != null) {
+            // 先处理字段
             for (TigerParser.ClassBodyDeclarationContext member : ctx.classBody().classBodyDeclaration()) {
                 if (member.memberDeclaration() != null && 
                     member.memberDeclaration().fieldDeclaration() != null) {
@@ -147,10 +163,8 @@ public class SemanticAnalyzer extends TigerBaseVisitor<Void> {
                     }
                 }
             }
-        }
-        
-        // 访问类成员（方法等）
-        if (ctx.classBody() != null) {
+            
+            // 再处理方法
             for (TigerParser.ClassBodyDeclarationContext member : ctx.classBody().classBodyDeclaration()) {
                 if (member.memberDeclaration() != null && 
                     member.memberDeclaration().methodDeclaration() != null) {

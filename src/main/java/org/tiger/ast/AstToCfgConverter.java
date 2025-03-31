@@ -406,7 +406,6 @@ public class AstToCfgConverter implements AstVisitor {
     }
 
     private String convertExpression(Expression exp) {
-        // 将表达式转换为字符串表示
         if (exp instanceof IdentifierExp) {
             return ((IdentifierExp) exp).name;
         } else if (exp instanceof IntegerLiteral) {
@@ -417,8 +416,19 @@ public class AstToCfgConverter implements AstVisitor {
             return "false";
         } else if (exp instanceof This) {
             return "this";
+        } else if (exp instanceof Call) {
+            Call call = (Call) exp;
+            List<String> args = new ArrayList<>();
+            for (Expression arg : call.args) {
+                args.add(convertExpression(arg));
+            }
+            String target = convertExpression(call.object);
+            // 生成临时变量来存储方法调用的结果
+            String tempVar = "_t" + (blockCounter++);
+            Statement stmt = new CallStatement(target, call.method, args);
+            currentBlock.addStatement(stmt);
+            return tempVar;
         }
-        // ... 处理其他类型的表达式
         return null;
     }
 

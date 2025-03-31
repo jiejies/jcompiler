@@ -1,1 +1,2 @@
 org\tiger\cfg\ClassEliminatorTest.class
+org\tiger\ast\AstToCfgConverterTest.class

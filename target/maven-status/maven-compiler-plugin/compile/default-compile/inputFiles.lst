@@ -30,6 +30,7 @@ D:\mycoding\jcompiler\src\main\java\org\tiger\cfg\StatementFactory.java
 D:\mycoding\jcompiler\src\main\java\org\tiger\semantic\SemanticAnalyzer.java
 D:\mycoding\jcompiler\src\main\java\org\tiger\cfg\statements\PlusStatement.java
 D:\mycoding\jcompiler\src\main\java\org\tiger\cfg\ClassNode.java
+D:\mycoding\jcompiler\src\main\java\org\tiger\ast\ParseTreeToAstConverter.java
 D:\mycoding\jcompiler\src\main\java\org\tiger\cfg\statements\PrintStatement.java
 D:\mycoding\jcompiler\src\main\java\org\tiger\TigerBaseListener.java
 D:\mycoding\jcompiler\src\main\java\org\tiger\cfg\statements\FalseStatement.java

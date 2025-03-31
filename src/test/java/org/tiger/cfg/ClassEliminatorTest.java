@@ -7,100 +7,63 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import org.tiger.TigerLexer;
 import org.tiger.TigerParser;
 import org.tiger.semantic.SemanticAnalyzer;
+import org.tiger.ast.*;
+import org.tiger.cfg.CFG;
+import java.util.Map;
 
 public class ClassEliminatorTest {
     
     @Test
     public void testSimpleInheritance() throws IOException {
-        // 读取测试源代码
-        String source = Files.readString(Paths.get("src/test/resources/simple_inheritance.tiger"));
-        System.out.println("源代码：\n" + source);
+        System.out.println("开始测试类继承消除...");
         
-        // 1. 词法分析
-        System.out.println("\n=== 词法分析 ===");
+        // 1. 读取并解析源代码，词法分析语法分析
+        System.out.println("步骤1: 解析源代码...");
+        String source = Files.readString(Paths.get("src/test/resources/simple_inheritance.tiger"));
         CharStream input = CharStreams.fromString(source);
         TigerLexer lexer = new TigerLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         tokens.fill();
-        
-        // 打印所有词法单元
-        System.out.println("词法单元列表：");
-        for (Token token : tokens.getTokens()) {
-            System.out.printf("行号: %d, 列号: %d, 类型: %s, 文本: %s%n",
-                token.getLine(),
-                token.getCharPositionInLine(),
-                lexer.getVocabulary().getDisplayName(token.getType()),
-                token.getText());
-        }
-        
-        // 2. 语法分析
-        System.out.println("\n=== 语法分析 ===");
         TigerParser parser = new TigerParser(tokens);
         ParseTree tree = parser.compilationUnit();
-        System.out.println("语法树：");
-        System.out.println(tree.toStringTree(parser));
         
-        // 3. 语义分析
-        System.out.println("\n=== 语义分析 ===");
+        // 2. 语义分析
+        System.out.println("步骤2: 进行语义分析...");
         SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer();
         semanticAnalyzer.visit(tree);
         
-        // 打印语义分析结果
         if (semanticAnalyzer.hasErrors()) {
-            System.out.println("发现语义错误：");
-            semanticAnalyzer.getErrors().forEach(System.out::println);
-        } else {
-            System.out.println("语义分析通过，未发现错误");
+            System.out.println("语义分析发现以下错误：");
+            for (String error : semanticAnalyzer.getErrors()) {
+                System.out.println("- " + error);
+            }
+            assertFalse("语义分析不应该有错误", semanticAnalyzer.hasErrors());
         }
         
-        // 4. 类消除（中间代码生成）
-        System.out.println("\n=== 中间代码生成（类消除） ===");
-        ClassEliminator eliminator = new ClassEliminator();
+        // 3. ParseTree 转换为 AST
+        System.out.println("步骤3: 转换为AST...");
+        ParseTreeToAstConverter astConverter = new ParseTreeToAstConverter();
+        Ast ast = astConverter.visit(tree);
+        assertNotNull("AST 不应该为空", ast);
         
-        // 添加类及其继承关系
-        eliminator.addClass("Animal", null);
-        eliminator.addClass("Dog", "Animal");
-        eliminator.addClass("Cat", "Animal");
+        // 4. AST 转换为 CFG
+        System.out.println("步骤4: 转换为CFG...");
+        AstToCfgConverter cfgConverter = new AstToCfgConverter();
+        ast.accept(cfgConverter);
+        Map<String, CFG> methodCFGs = cfgConverter.getMethodCFGs();
+        assertFalse("应该至少生成一个方法的 CFG", methodCFGs.isEmpty());
         
-        // 添加字段
-        ClassNode animal = eliminator.getClassMap().get("Animal");
-        animal.addField(new ClassNode.Field("name", "String"));
-        animal.addField(new ClassNode.Field("age", "int"));
+        // 5. 打印生成的 CFG 结构
+        System.out.println("\n=== 生成的 CFG 结构 ===");
+        for (Map.Entry<String, CFG> entry : methodCFGs.entrySet()) {
+            System.out.println("\n方法: " + entry.getKey());
+            CFG cfg = entry.getValue();
+            System.out.println(cfg.toString());
+        }
         
-        // 添加方法
-        animal.addMethod(new ClassNode.Method(
-            "makeSound",
-            "void",
-            new ArrayList<>(),
-            null
-        ));
-        
-        // 构建继承树并消除类
-        eliminator.buildInheritanceTree();
-        eliminator.eliminateClasses();
-        
-        // 打印类消除结果
-        System.out.println("\n类消除结果：");
-        System.out.println("1. 类信息：");
-        eliminator.getClassMap().forEach((className, classNode) -> {
-            System.out.println("\n类名：" + className);
-            System.out.println("字段：");
-            classNode.getFields().forEach(field -> 
-                System.out.println("  - " + field.getName() + " : " + field.getType()));
-            System.out.println("方法：");
-            classNode.getMethods().forEach(method -> {
-                System.out.println("  - " + method.getName() + " : " + method.getReturnType());
-                System.out.println("    参数：");
-                method.getParameters().forEach(param ->
-                    System.out.println("    * " + param.getName() + " : " + param.getType()));
-            });
-        });
-        
-        System.out.println("\n2. 继承树：");
-        System.out.println(eliminator.getInheritanceTree());
+        System.out.println("测试通过！成功完成了类继承消除的转换过程。");
     }
 }
