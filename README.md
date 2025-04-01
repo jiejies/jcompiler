@@ -55,10 +55,17 @@ src/
     - [x] 循环语句（while）
     - [x] 方法调用
 
-### 5. 测试覆盖
+### 5. 运行时支持
+- [x] TigerRuntime类实现
+  - [x] printInt：输出整数值到命令行
+  - [x] printString：输出字符串到命令行
+  - [x] printBoolean：输出布尔值到命令行
+
+### 6. 测试覆盖
 - [x] AstToCfgConverterTest：AST 到 CFG 的转换测试
 - [x] ClassEliminatorTest：类继承消除功能测试
 - [x] WhileLoopTest：while 循环的 CFG 转换测试
+- [x] OutputTest：输出功能测试
 
 ## 待实现功能
 
@@ -110,9 +117,21 @@ class Dog extends Animal {
 }
 ```
 
-2. 多层继承：测试多层继承关系下的字段和方法处理
-3. 语义错误检查：测试类型错误、未定义变量等场景
-4. CFG 生成：
+2. 输出功能：
+```java
+// output_test.tiger
+class Test_output_main {
+    public static void main(String[] args) {
+        TigerRuntime.printInt(42);
+        TigerRuntime.printString("Hello, Tiger!");
+        TigerRuntime.printBoolean(true);
+    }
+}
+```
+
+3. 多层继承：测试多层继承关系下的字段和方法处理
+4. 语义错误检查：测试类型错误、未定义变量等场景
+5. CFG 生成：
    - 基本赋值语句测试
    - 数组操作测试
    - 条件语句测试
@@ -169,6 +188,32 @@ Tiger是一个简单的面向对象语言，具有以下特性：
 - 静态字段和方法
 - 数组操作
 - 基本控制流语句（if-else、while）
+- 标准输出功能（通过TigerRuntime类）
+
+## 运行时库
+
+Tiger语言提供了一个运行时库`TigerRuntime`，用于支持基本的输入输出操作：
+
+### TigerRuntime类
+
+`TigerRuntime`是一个内置类，提供了以下静态方法：
+
+1. `printInt(int value)`：将整数值输出到命令行
+   ```java
+   TigerRuntime.printInt(42);  // 输出: 42
+   ```
+
+2. `printString(String value)`：将字符串输出到命令行
+   ```java
+   TigerRuntime.printString("Hello, Tiger!");  // 输出: Hello, Tiger!
+   ```
+
+3. `printBoolean(boolean value)`：将布尔值输出到命令行
+   ```java
+   TigerRuntime.printBoolean(true);  // 输出: true
+   ```
+
+这意味着Tiger程序最终会编译成Java字节码，并在JVM上运行，输出显示在命令行终端中。
 
 ## 语法规则和命名规范
 
@@ -277,7 +322,7 @@ Tiger是一个简单的面向对象语言，具有以下特性：
    - 不支持 null 值
    - 不支持 break 和 continue
    - 只支持 while 循环（不支持 for、do-while）
-   - 只支持 print 作为内置函数
+   - 支持 TigerRuntime 类的输出方法
 
 ### 示例程序
 
@@ -289,7 +334,7 @@ class Counter {
     void increment() {
         while (count < 10) {
             count = count + 1;
-            print count;
+            TigerRuntime.printInt(count);
         }
     }
 }
@@ -319,16 +364,7 @@ class Dog extends Animal {
     void bark() {
         age = age + 2;
         makeSound();
+        TigerRuntime.printString("Woof!");
     }
 }
 ```
-
-## 开发计划
-
-- [x] 项目基础结构
-- [x] ANTLR4语法文件
-- [x] AST节点定义
-- [ ] 语义分析
-- [ ] 类型检查
-- [ ] 中间代码生成
-- [ ] 目标代码生成 

@@ -1,0 +1,5 @@
+class Test_output_main {
+    public static void main(String[] args) {
+        TigerRuntime.printInt(42);
+    }
+} 

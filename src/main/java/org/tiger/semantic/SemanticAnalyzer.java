@@ -322,6 +322,32 @@ public class SemanticAnalyzer extends TigerBaseVisitor<Void> {
         return visitChildren(ctx);
     }
     
+    @Override
+    public Void visitExpression(TigerParser.ExpressionContext ctx) {
+        // 特殊处理TigerRuntime类
+        if (ctx.getChildCount() == 3 && ctx.getChild(1).getText().equals(".")) {
+            if (ctx.getChild(0) instanceof TigerParser.ExpressionContext) {
+                TigerParser.ExpressionContext leftExpr = (TigerParser.ExpressionContext) ctx.getChild(0);
+                if (leftExpr.primary() != null && leftExpr.primary().IDENTIFIER() != null) {
+                    String className = leftExpr.primary().IDENTIFIER().getText();
+                    if ("TigerRuntime".equals(className)) {
+                        // TigerRuntime是一个特殊的内置类，不需要检查其定义
+                        if (ctx.getChild(2) instanceof TigerParser.MethodCallContext) {
+                            TigerParser.MethodCallContext methodCall = (TigerParser.MethodCallContext) ctx.getChild(2);
+                            String methodName = methodCall.IDENTIFIER().getText();
+                            if ("printInt".equals(methodName) || "printString".equals(methodName) || "printBoolean".equals(methodName)) {
+                                // 这些是TigerRuntime的合法方法，跳过常规检查
+                                return null;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return visitChildren(ctx);
+    }
+    
     private TigerParser.MethodDeclarationContext findParentMethod(TigerParser.StatementContext ctx) {
         ParseTree parent = ctx.getParent();
         while (parent != null) {

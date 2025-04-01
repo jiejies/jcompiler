@@ -27,6 +27,7 @@ D:\mycoding\jcompiler\src\main\java\org\tiger\cfg\statements\IntegerLiteralState
 D:\mycoding\jcompiler\src\main\java\org\tiger\TigerVisitor.java
 D:\mycoding\jcompiler\src\main\java\org\tiger\ast\AstVisitor.java
 D:\mycoding\jcompiler\src\main\java\org\tiger\cfg\StatementFactory.java
+D:\mycoding\jcompiler\src\main\java\org\tiger\runtime\TigerRuntime.java
 D:\mycoding\jcompiler\src\main\java\org\tiger\semantic\SemanticAnalyzer.java
 D:\mycoding\jcompiler\src\main\java\org\tiger\cfg\statements\PlusStatement.java
 D:\mycoding\jcompiler\src\main\java\org\tiger\cfg\ClassNode.java

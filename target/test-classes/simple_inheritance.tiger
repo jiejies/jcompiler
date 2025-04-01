@@ -37,11 +37,11 @@ class Cat extends Animal {
     }
 }
 
-class Test_main {
+class Animal_main {
     public static void main(String[] args) {
         Dog dog = new Dog();
-        dog.setName("Rex");
-        dog.setBreed("German Shepherd");
+        dog.setName("Buddy");
+        dog.setBreed("Golden Retriever");
         dog.bark();
         
         Cat cat = new Cat();
