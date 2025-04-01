@@ -54,35 +54,23 @@ src/
     - [x] 条件语句（if-else）
     - [x] 循环语句（while）
     - [x] 方法调用
-- [ ] 三地址码生成
+
+### 5. 测试覆盖
+- [x] AstToCfgConverterTest：AST 到 CFG 的转换测试
+- [x] ClassEliminatorTest：类继承消除功能测试
+- [x] WhileLoopTest：while 循环的 CFG 转换测试
 
 ## 待实现功能
 
-### 1. 中间代码生成（续）
-- [ ] 三地址码生成
-  - [ ] 基本算术运算
-  - [ ] 条件跳转
-  - [ ] 方法调用
-  - [ ] 数组操作
-
-### 2. 中间代码优化
+### 1. 中间代码优化
 - [ ] 常量传播
 - [ ] 死代码消除
 - [ ] 循环优化
-  - [ ] 循环不变量外提
-  - [ ] 强度削弱
-  - [ ] 循环展开
 
-### 3. 目标代码生成
+### 2. 目标代码生成
+- [ ] 字节码生成（使用 ASM）
 - [ ] 寄存器分配
-  - [ ] 活跃变量分析
-  - [ ] 图着色算法
 - [ ] 指令选择
-  - [ ] 树模式匹配
-  - [ ] 指令模板
-- [ ] 代码生成
-  - [ ] 目标平台特定优化
-  - [ ] 栈帧管理
 
 ## 如何运行
 
@@ -99,7 +87,29 @@ mvn test
 ## 测试用例
 
 目前支持以下测试场景：
-1. 简单继承：测试基本的类继承关系和方法重写
+
+1. 简单继承：
+```java
+// simple_inheritance.tiger
+class Animal {
+    String name;
+    int age;
+    
+    void makeSound() {
+        age = age + 1;
+    }
+}
+
+class Dog extends Animal {
+    String breed;
+    
+    void bark() {
+        age = age + 2;
+        makeSound();
+    }
+}
+```
+
 2. 多层继承：测试多层继承关系下的字段和方法处理
 3. 语义错误检查：测试类型错误、未定义变量等场景
 4. CFG 生成：
@@ -117,32 +127,30 @@ mvn test
   - [x] Part A: CFG 数据结构
   - [x] Part B: 类消除
   - [x] Part C: AST 到 CFG 的基本转换
-  - [ ] Part D: 完整 CFG 转换（循环和方法调用）
-  - [ ] Part E: 三地址码生成
+  - [x] Part D: 完整 CFG 转换（循环和方法调用）
+  - [ ] Part E: 字节码生成
   - [ ] Part F: 程序分析和优化
 
 ## 下一步计划
 
-1. 实现循环语句（while）的 CFG 转换
-   - 创建循环头部块
-   - 处理循环体
-   - 正确连接循环的控制流
-   
-2. 实现方法调用的 CFG 转换
-   - 处理参数传递
-   - 创建调用和返回块
-   - 连接调用者和被调用者的 CFG
+1. 实现字节码生成
+   - 使用 ASM 库生成 JVM 字节码
+   - 处理类和方法的字节码生成
+   - 实现基本语句的字节码转换
 
-3. 开始实现三地址码生成
-   - 设计三地址码的数据结构
-   - 从 CFG 生成三地址码
-   - 实现基本的优化
+2. 实现程序优化
+   - 实现常量传播
+   - 实现死代码消除
+   - 实现循环优化
 
 ## 依赖
 
-- Java 8 或更高版本
+- Java 11
 - ANTLR 4.13.1
-- Maven 3.x
+- ASM 9.6
+- JUnit 4.13.2
+- SLF4J 2.0.9
+- Logback 1.4.11
 
 ## 构建要求
 
@@ -152,13 +160,168 @@ mvn test
 
 ## Tiger语言特性
 
-Tiger是一个简单的命令式语言，具有以下特性：
+Tiger是一个简单的面向对象语言，具有以下特性：
 
-- 整数和字符串类型
-- 变量声明
-- 函数定义
-- 数组和记录
-- 循环和条件语句
+- 基本类型：整数、布尔值、字符串
+- 类定义和继承
+- 方法定义和重写
+- 实例字段和方法
+- 静态字段和方法
+- 数组操作
+- 基本控制流语句（if-else、while）
+
+## 语法规则和命名规范
+
+### 命名规则
+1. 主类（包含 main 方法的类）：
+   - 类名必须以 `_main` 结尾
+   - 必须包含 `public static void main(String[] args)` 方法
+   - 示例：
+     ```java
+     class Counter_main {
+         public static void main(String[] args) {
+             Counter c = new Counter();
+             c.increment();
+         }
+     }
+     ```
+
+2. 标识符规则：
+   - 类名：必须以大写字母开头，可包含字母、数字和下划线
+   - 方法名：必须以小写字母开头，可包含字母、数字和下划线
+   - 变量名：必须以小写字母开头，可包含字母、数字和下划线
+   - 不允许使用 Java 关键字作为标识符
+
+### 语法规则（类似 Java 的简化版）
+
+1. 类定义：
+   ```java
+   class ClassName [extends ParentClass] {
+       // 字段和方法定义
+   }
+   ```
+
+2. 字段定义：
+   ```java
+   [static] Type fieldName;
+   ```
+   支持的类型：
+   - `int`：整数类型
+   - `String`：字符串类型
+   - `boolean`：布尔类型
+   - 自定义类类型
+   - 数组类型：`Type[]`
+
+3. 方法定义：
+   ```java
+   [public] [static] ReturnType methodName([Parameters]) {
+       // 方法体
+   }
+   ```
+   - 返回类型：void 或任何支持的类型
+   - 参数列表：逗号分隔的 `Type paramName` 对
+
+4. 表达式：
+   - 算术运算：`+`、`-`、`*`
+   - 比较运算：`<`、`>`、`==`
+   - 逻辑运算：`&&`
+   - 方法调用：`object.method(args)`
+   - 对象创建：`new ClassName()`
+   - 变量引用：`variableName`
+   - 字面量：整数、布尔值（true/false）、字符串
+
+5. 语句：
+   ```java
+   // 赋值语句
+   variable = expression;
+   
+   // if 语句
+   if (condition) {
+       statements
+   } else {
+       statements
+   }
+   
+   // while 循环
+   while (condition) {
+       statements
+   }
+   
+   // 方法调用语句
+   object.method(args);
+   
+   // 打印语句
+   print expression;
+   ```
+
+### 限制和约束
+
+1. 访问控制：
+   - 只支持 public 和 static 修饰符
+   - 默认所有成员都是 public
+
+2. 继承限制：
+   - 只支持单继承
+   - 不支持接口
+   - 子类可以重写父类方法
+
+3. 类型系统：
+   - 不支持泛型
+   - 不支持类型转换
+   - 类型必须严格匹配
+
+4. 其他限制：
+   - 不支持构造函数重载
+   - 不支持方法重载
+   - 不支持 this 关键字（编译器自动处理）
+   - 不支持 null 值
+   - 不支持 break 和 continue
+   - 只支持 while 循环（不支持 for、do-while）
+   - 只支持 print 作为内置函数
+
+### 示例程序
+
+1. 简单计数器：
+```java
+class Counter {
+    int count;
+    
+    void increment() {
+        while (count < 10) {
+            count = count + 1;
+            print count;
+        }
+    }
+}
+
+class Counter_main {
+    public static void main(String[] args) {
+        Counter c = new Counter();
+        c.increment();
+    }
+}
+```
+
+2. 继承示例：
+```java
+class Animal {
+    String name;
+    int age;
+    
+    void makeSound() {
+        age = age + 1;
+    }
+}
+
+class Dog extends Animal {
+    String breed;
+    
+    void bark() {
+        age = age + 2;
+        makeSound();
+    }
+}
+```
 
 ## 开发计划
 

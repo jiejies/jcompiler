@@ -35,4 +35,18 @@ class Cat extends Animal {
     void setIndoor(boolean indoor) {
         isIndoor = indoor;
     }
+}
+
+class Test_main {
+    public static void main(String[] args) {
+        Dog dog = new Dog();
+        dog.setName("Rex");
+        dog.setBreed("German Shepherd");
+        dog.bark();
+        
+        Cat cat = new Cat();
+        cat.setName("Whiskers");
+        cat.setIndoor(true);
+        cat.meow();
+    }
 } 
