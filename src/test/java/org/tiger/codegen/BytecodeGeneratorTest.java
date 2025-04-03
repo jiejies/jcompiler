@@ -4,12 +4,12 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.tiger.cfg.*;
 import org.tiger.cfg.statements.*;
-
+import org.tiger.codegen.BytecodeGenerator;
 import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.List;
 import java.util.Arrays;
+import java.io.File;
 
 public class BytecodeGeneratorTest {
     @Test
@@ -53,10 +53,14 @@ public class BytecodeGeneratorTest {
         
         // 生成字节码
         BytecodeGenerator generator = new BytecodeGenerator();
-        byte[] bytecode = generator.generateClass("org/tiger/TestClass", methodCFGs);
+        byte[] bytecode = generator.generateClass("org.tiger.TestClass", methodCFGs);
+        
+        // 创建目录
+        File dir = new File("target/classes/org/tiger");
+        dir.mkdirs();
         
         // 保存字节码到文件
-        try (FileOutputStream fos = new FileOutputStream("TestClass.class")) {
+        try (FileOutputStream fos = new FileOutputStream("target/classes/org/tiger/TestClass.class")) {
             fos.write(bytecode);
         }
         
