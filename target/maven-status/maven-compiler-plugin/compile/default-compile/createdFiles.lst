@@ -139,5 +139,6 @@ org\tiger\ast\ArrayLookup.class
 org\tiger\ast\ParseTreeToAstConverter.class
 org\tiger\ast\While.class
 org\tiger\cfg\statements\NewObjectStatement.class
+org\tiger\codegen\BytecodeGenerator$1.class
 org\tiger\cfg\statements\ArrayLengthStatement.class
 org\tiger\TigerParser$VariableDeclaratorsContext.class

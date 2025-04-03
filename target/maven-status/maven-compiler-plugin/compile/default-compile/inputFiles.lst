@@ -9,12 +9,14 @@ D:\mycoding\jcompiler\src\main\java\org\tiger\cfg\statements\LessThanStatement.j
 D:\mycoding\jcompiler\src\main\java\org\tiger\cfg\statements\NotStatement.java
 D:\mycoding\jcompiler\src\main\java\org\tiger\cfg\statements\TrueStatement.java
 D:\mycoding\jcompiler\src\main\java\org\tiger\cfg\BasicBlock.java
+D:\mycoding\jcompiler\src\main\java\org\tiger\cfg\MethodCFG.java
 D:\mycoding\jcompiler\src\main\java\org\tiger\cfg\statements\ArrayLengthStatement.java
 D:\mycoding\jcompiler\src\main\java\org\tiger\cfg\statements\NewObjectStatement.java
 D:\mycoding\jcompiler\src\main\java\org\tiger\cfg\statements\NewArrayStatement.java
 D:\mycoding\jcompiler\src\main\java\org\tiger\cfg\statements\ReturnStatement.java
 D:\mycoding\jcompiler\src\main\java\org\tiger\cfg\statements\CallStatement.java
 D:\mycoding\jcompiler\src\main\java\org\tiger\ast\Interpreter.java
+D:\mycoding\jcompiler\src\main\java\org\tiger\codegen\BytecodeGenerator.java
 D:\mycoding\jcompiler\src\main\java\org\tiger\TigerLexer.java
 D:\mycoding\jcompiler\src\main\java\org\tiger\cfg\statements\AndStatement.java
 D:\mycoding\jcompiler\src\main\java\org\tiger\cfg\statements\IdentifierStatement.java

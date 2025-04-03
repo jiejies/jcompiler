@@ -1,4 +1,5 @@
 D:\mycoding\jcompiler\src\test\java\org\tiger\ast\AstToCfgConverterTest.java
 D:\mycoding\jcompiler\src\test\java\org\tiger\cfg\OutputTest.java
+D:\mycoding\jcompiler\src\test\java\org\tiger\codegen\BytecodeGeneratorTest.java
 D:\mycoding\jcompiler\src\test\java\org\tiger\cfg\WhileLoopTest.java
 D:\mycoding\jcompiler\src\test\java\org\tiger\cfg\ClassEliminatorTest.java
